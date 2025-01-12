@@ -14,6 +14,8 @@ export interface AudioSettingsType {
 export interface SystemSettingsType {
   channel3Option: 'default' | 'alwaysLoad' | 'turnOff';
   showControlsOnStart: boolean;
+  startOnPCBoot: boolean;
+  // Add any additional properties expected by the SystemSettings component
 }
 
 export type FolderSelection = {
@@ -25,3 +27,10 @@ export type FolderSelection = {
   outros: string[];
 };
 
+export type ChannelData = {
+  id: number;
+  name: string;
+  shows: { name: string; time: string; isPlaying: boolean }[];
+  isEnabled: boolean;
+  url?: string; // Make url optional
+};

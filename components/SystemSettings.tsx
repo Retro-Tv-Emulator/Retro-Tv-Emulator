@@ -6,9 +6,10 @@ import ExitConfirmation from './ExitConfirmation'
 import { Button } from '@/components/ui/button'
 
 export interface SystemSettingsType {
-  channel3Option: 'default' | 'alwaysLoad' | 'turnOff'
-  showControlsOnStart: boolean
-  startOnPCBoot: boolean
+  channel3Option: 'default' | 'alwaysLoad' | 'turnOff';
+  showControlsOnStart: boolean;
+  startOnPCBoot: boolean;
+  // Add any additional properties expected by the SystemSettings component
 }
 
 interface SystemSettingsProps {

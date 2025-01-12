@@ -9,17 +9,24 @@ import { FolderSelection } from '../types'
 import { useAudio } from '../contexts/AudioContext'
 import EmulationStation from './EmulationStation'
 import MusicVisualizer from './MusicVisualizer'
+import { AudioSettingsType } from '../types';
 
 interface ChannelManagerProps {
-  currentChannel: number
-  videoSettings: VideoSettingsType
-  channelFolders: Record<number, FolderSelection>
-  enabledChannels: Set<number>
-  channelNames: Record<number, string>
-  onChannelChange: (channel: number) => void
-  menuColor: string
-  uiColor: string
-  isAnyMenuOpen: boolean
+  currentChannel: number;
+  videoSettings: VideoSettingsType;
+  channelFolders: Record<number, FolderSelection>;
+  enabledChannels: Set<number>;
+  channelNames: Record<number, string>;
+  onChannelChange: (channel: number) => void;
+  menuColor: string;
+  uiColor: string;
+  isAnyMenuOpen: boolean;
+  isMuted: boolean; // Add this
+  volume: number; // Add this
+  isStereo: boolean; // Add this
+  audioSettings: AudioSettingsType; // Add this
+  isVideoPlayerButtonSelected: boolean; // Add this
+  setIsVideoPlayerButtonSelected: React.Dispatch<React.SetStateAction<boolean>>; // Add this
 }
 
 export default function ChannelManager({

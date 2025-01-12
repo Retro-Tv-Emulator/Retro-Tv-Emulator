@@ -45,8 +45,8 @@ function HomeContent() {
   const [channels, setChannels] = useState<ChannelData[]>([])
   const [isVideoPlayerButtonSelected, setIsVideoPlayerButtonSelected] = useState(true) // Added state for video player button
 
-  const volumeDisplayTimeout = useRef<NodeJS.Timeout | null>(null);
-  const muteDisplayTimeout = useRef<NodeJS.Timeout | null>(null);
+  const volumeDisplayTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const muteDisplayTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const channelInputTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const channelFoldersRef = useRef(channelFolders)
@@ -288,119 +288,129 @@ function HomeContent() {
   }, []);
 
   useEffect(() => {
-    const initialChannels: ChannelData[] = Array.from({ length: LAST_CHANNEL - FIRST_CHANNEL + 1 }, (_, i) => {
-      const channelNumber = i + FIRST_CHANNEL;
-      let channelName = `${channelNumber.toString().padStart(2, '0')}`
-      let showName = 'Off-Air'
+  const initialChannels: ChannelData[] = Array.from({ length: LAST_CHANNEL - FIRST_CHANNEL + 1 }, (_, i) => {
+    const channelNumber = i + FIRST_CHANNEL;
+    let channelName = `${channelNumber.toString().padStart(2, '0')}`;
+    let showName = 'Off-Air';
 
-      if (channelNumber === 3) {
-        channelName = '03 Games'
-        showName = 'Games'
-      } else if (channelNumber === 4) {
-        channelName += ' TV Guide'
-        showName = 'TV Guide'
-      } else if (channelNumber === 5) {
-        channelName = '05 Video Player' // Updated to always set channel 5 as Video Player
-        showName = 'Video Player'
-      } else if (channelNumber === 6) {
-        channelName = '06'
-        showName = 'No Content'
-      } else if (channelNumber === 44) {
-        channelName += ' Music'
-        showName = 'Music'
-      } else if (channelNames[channelNumber]) {
-        channelName += ` ${channelNames[channelNumber]}`
-      }
+    if (channelNumber === 3) {
+      channelName = '03 Games';
+      showName = 'Games';
+    } else if (channelNumber === 4) {
+      channelName += ' TV Guide';
+      showName = 'TV Guide';
+    } else if (channelNumber === 5) {
+      channelName = '05 Video Player'; // Updated to always set channel 5 as Video Player
+      showName = 'Video Player';
+    } else if (channelNumber === 6) {
+      channelName = '06';
+      showName = 'No Content';
+    } else if (channelNumber === 44) {
+      channelName += ' Music';
+      showName = 'Music';
+    } else if (channelNames[channelNumber]) {
+      channelName += ` ${channelNames[channelNumber]}`;
+    }
 
-      return {
-        id: channelNumber,
-        name: channelName,
-        shows: Array.from({ length: 48 }, () => ({
-          name: showName,
-          time: '',
-          isPlaying: false
-        })),
-        isEnabled: enabledChannels.has(channelNumber)
-      }
-    })
-    setChannels(initialChannels)
-  }, [enabledChannels, channelNames])
+    return {
+      id: channelNumber,
+      name: channelName,
+      shows: Array.from({ length: 48 }, () => ({
+        name: showName,
+        time: '',
+        isPlaying: false,
+      })),
+      isEnabled: enabledChannels.has(channelNumber),
+      url: '', // Add a default url (e.g., empty string)
+    };
+  });
+  setChannels(initialChannels);
+}, [enabledChannels, channelNames]);
+
 
   if (isLoading) {
     return <LoadingScreen onLoadingComplete={handleLoadingComplete} />
   }
 
-  return (
-    <main className="w-full h-screen relative bg-black overflow-hidden focus:outline-none" tabIndex={-1}>
-      {isChangingChannel ? (
-        <div className="absolute inset-0 bg-black z-50" />
-      ) : (
-        <div className="w-full h-full">
-          <ChannelManager
-            currentChannel={channel}
-            isMuted={audioSettings.isMuted || isAnyMenuOpen}
-            volume={audioSettings.volume / 100}
-            videoSettings={videoSettings}
-            channelFolders={channelFolders}
-            isStereo={audioSettings.isStereo}
-            enabledChannels={enabledChannels}
-            channelNames={channelNames}
-            onChannelChange={(newChannel) => changeChannel(0, newChannel)}
-            menuColor={menuColor}
-            uiColor={uiColor}
-            isAnyMenuOpen={isAnyMenuOpen}
-            audioSettings={audioSettings}
-            isVideoPlayerButtonSelected={isVideoPlayerButtonSelected}
-            setIsVideoPlayerButtonSelected={setIsVideoPlayerButtonSelected}
-          />
-        </div>
-      )}
-      {showMenu && (
-        <ControlsMenu 
-          onClose={() => {
-            setShowMenu(false)
-          }} 
-          menuColor={menuColor}
-          uiColor={uiColor}
-        />
-      )}
-      {showBlankMenu && (
-        <BlankMenu 
-          onClose={closeAllMenus}
-          onChannelToggle={handleChannelToggle}
-          enabledChannels={enabledChannels}
-          onVideoSettingsChange={handleVideoSettingsChange}
+return (
+  <main className="w-full h-screen relative bg-black overflow-hidden focus:outline-none" tabIndex={-1}>
+    {isChangingChannel ? (
+      <div className="absolute inset-0 bg-black z-50" />
+    ) : (
+      <div className="w-full h-full">
+        <ChannelManager
+          currentChannel={channel}
+          isMuted={audioSettings.isMuted || isAnyMenuOpen}
+          volume={audioSettings.volume / 100}
           videoSettings={videoSettings}
-          onAudioSettingsChange={setAudioSettings}
-          audioSettings={audioSettings}
-          onFoldersChange={handleFoldersChange}
           channelFolders={channelFolders}
-          onThemeChange={handleThemeChange}
+          isStereo={audioSettings.isStereo}
+          enabledChannels={enabledChannels}
+          channelNames={channelNames}
+          onChannelChange={(newChannel) => changeChannel(0, newChannel)}
           menuColor={menuColor}
           uiColor={uiColor}
-          onSystemSettingsChange={handleSystemSettingsChange}
-          systemSettings={systemSettings}
-          onExit={() => setShowExitConfirmation(true)}
-          onReset={handleReset}
-          onChannelNameChange={handleChannelNameChange}
-          channelNames={channelNames}
-          showBlankMenu={showBlankMenu}
-          TOTAL_CHANNELS={TOTAL_CHANNELS}
-          FIRST_CHANNEL={FIRST_CHANNEL}
-          LAST_CHANNEL={LAST_CHANNEL}
+          isAnyMenuOpen={isAnyMenuOpen}
+          audioSettings={audioSettings}
+          isVideoPlayerButtonSelected={isVideoPlayerButtonSelected}
+          setIsVideoPlayerButtonSelected={setIsVideoPlayerButtonSelected}
         />
-      )}
-      {showExitConfirmation && <ExitConfirmation onConfirm={handleExit} menuColor={menuColor} uiColor={uiColor} />}
-      {<ChannelDisplay 
-        channel={channel} 
-        uiColor={uiColor} 
-        isVisible={showChannel || showChannelInput} 
-        channelInput={channelInput}
-      />}
-      {showMute && <MuteDisplay isMuted={audioSettings.isMuted} uiColor={uiColor} />}
-      {showVolume && <VolumeDisplay volume={audioSettings.volume} uiColor={uiColor} isMuted={audioSettings.isMuted} />}
-    </main>
-  )
+      </div>
+    )}
+    {showMenu && (
+      <ControlsMenu
+        onClose={() => {
+          setShowMenu(false);
+        }}
+        menuColor={menuColor}
+        uiColor={uiColor}
+      />
+    )}
+    {showBlankMenu && (
+      <BlankMenu
+        onClose={closeAllMenus}
+        onChannelToggle={handleChannelToggle}
+        enabledChannels={enabledChannels}
+        onVideoSettingsChange={handleVideoSettingsChange}
+        videoSettings={videoSettings}
+        onAudioSettingsChange={setAudioSettings}
+        audioSettings={audioSettings}
+        onFoldersChange={handleFoldersChange}
+        channelFolders={channelFolders}
+        onThemeChange={handleThemeChange}
+        menuColor={menuColor}
+        uiColor={uiColor}
+        onSystemSettingsChange={handleSystemSettingsChange}
+        systemSettings={systemSettings}
+        onExit={() => setShowExitConfirmation(true)}
+        onReset={handleReset}
+        onChannelNameChange={handleChannelNameChange}
+        channelNames={channelNames}
+        showBlankMenu={showBlankMenu}
+        TOTAL_CHANNELS={TOTAL_CHANNELS}
+        FIRST_CHANNEL={FIRST_CHANNEL}
+        LAST_CHANNEL={LAST_CHANNEL}
+      />
+    )}
+    {showExitConfirmation && (
+      <ExitConfirmation
+        onConfirm={handleExit}
+        menuColor={menuColor}
+        uiColor={uiColor}
+        title="Exit Confirmation" // Added missing prop
+        message="Are you sure you want to exit?" // Added missing prop
+      />
+    )}
+    {<ChannelDisplay
+      channel={channel}
+      uiColor={uiColor}
+      isVisible={showChannel || showChannelInput}
+      channelInput={channelInput}
+    />}
+    {showMute && <MuteDisplay isMuted={audioSettings.isMuted} uiColor={uiColor} />}
+    {showVolume && <VolumeDisplay volume={audioSettings.volume} uiColor={uiColor} isMuted={audioSettings.isMuted} />}
+  </main>
+);
 }
 
 export default function Home() {

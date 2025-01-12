@@ -2,17 +2,19 @@ import { useEffect, useCallback } from 'react'
 import { AudioSettingsType, SystemSettingsType } from '../types'
 
 interface KeyboardControlsProps {
-  changeChannel: (delta: number, directChannel?: number) => void
-  changeVolume: (delta: number) => void
-  toggleMute: () => void
-  setShowBlankMenu: React.Dispatch<React.SetStateAction<boolean>>
-  setShowExitConfirmation: React.Dispatch<React.SetStateAction<boolean>>
-  toggleControlsMenu: () => void
-  audioSettings: AudioSettingsType
-  isAnyMenuOpen: boolean
-  systemSettings: SystemSettingsType
-  handleChannelInput: (input: string) => void
-  clearChannelInput: () => void
+  changeChannel: (delta: number, directChannel?: number) => void;
+  changeVolume: (delta: number) => void;
+  toggleMute: () => void;
+  setShowBlankMenu: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowExitConfirmation: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleControlsMenu: () => void;
+  audioSettings: AudioSettingsType;
+  isAnyMenuOpen: boolean;
+  systemSettings: SystemSettingsType;
+  handleChannelInput: (input: string) => void;
+  clearChannelInput: () => void;
+  isVideoPlayerButtonSelected: boolean; // Add this
+  setIsVideoPlayerButtonSelected: React.Dispatch<React.SetStateAction<boolean>>; // Add this
 }
 
 export default function useKeyboardControls({
