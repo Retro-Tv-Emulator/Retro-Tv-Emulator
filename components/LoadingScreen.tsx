@@ -60,8 +60,8 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
          <Image
            src={ICON_URL}
            alt="Retro TV"
-           layout="fill"
-           objectFit="contain"
+           fill
+           style={{ objectFit: 'contain' }}
            priority
            unoptimized
            className="rounded-3xl"
