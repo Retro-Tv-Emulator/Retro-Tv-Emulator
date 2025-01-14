@@ -212,10 +212,10 @@ export default function TVGuide({ menuColor, uiColor, enabledChannels, channelNa
     const containerHeight = previewRef.current.offsetHeight;
 
     const aspectRatio = 16 / 9;
-    let width = containerWidth * 0.86625; // Increased from 0.825 (82.5%) to 0.86625 (86.625%)
+    let width = containerWidth * 0.86625; 
     let height = width / aspectRatio;
 
-    if (height > containerHeight * 0.98175) { // Increased from 0.935 (93.5%) to 0.98175 (98.175%)
+    if (height > containerHeight * 0.98175) { 
       height = containerHeight * 0.98175;
       width = height * aspectRatio;
     }
@@ -317,10 +317,10 @@ export default function TVGuide({ menuColor, uiColor, enabledChannels, channelNa
           <div className="flex-grow overflow-auto">
             <table className="w-full border-collapse tv-guide-table">
               <thead>
-                <tr className={`bg-${menuColor}-900`}>
-                  <th className={`p-2 border border-${menuColor}-700 sticky left-0 z-30 w-[120px]`}>Channels</th>
+                <tr className={`bg-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-900`}>
+                  <th className={`p-2 border border-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-700 sticky left-0 z-30 w-[120px]`}>Channels</th>
                   {visibleTimeSlots.map((time, index) => (
-                    <th key={time} className={`p-2 border border-${menuColor}-700 w-[120px] bg-${menuColor}-900`}>
+                    <th key={time} className={`p-2 border border-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-700 w-[120px] bg-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-900`}>
                       {time}
                     </th>
                   ))}
@@ -332,18 +332,18 @@ export default function TVGuide({ menuColor, uiColor, enabledChannels, channelNa
                     <tr key={channel.id}>
                       <td className={`p-2 sticky left-0 z-20 ${
                         index === 1
-                          ? `bg-${uiColor}-500 text-${menuColor}-900`
-                          : `bg-${menuColor}-800`
-                      } border border-${menuColor}-700 w-[120px]`}>
+                          ? `bg-${uiColor === 'blue' ? 'blue' : uiColor === 'green' ? 'green' : uiColor === 'red' ? 'red' : uiColor === 'pink' ? 'pink' : uiColor === 'purple' ? 'purple' : uiColor === 'yellow' ? 'yellow' : 'orange'}-500 text-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-900`
+                          : `bg-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-800`
+                      } border border-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-700 w-[120px]`}>
                         {channel.name}
                       </td>
                       {visibleTimeSlots.map((_, timeIndex) => (
                         <td 
                           key={timeIndex}
-                          className={`p-2 border border-${menuColor}-700 text-center relative w-[120px] ${
+                          className={`p-2 border border-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-700 text-center relative w-[120px] ${
                             index === 1 && timeIndex === selectedTimeSlotIndex
-                              ? `bg-${uiColor}-500 text-${menuColor}-900`
-                              : `bg-${menuColor}-600`
+                              ? `bg-${uiColor === 'blue' ? 'blue' : uiColor === 'green' ? 'green' : uiColor === 'red' ? 'red' : uiColor === 'pink' ? 'pink' : uiColor === 'purple' ? 'purple' : uiColor === 'yellow' ? 'yellow' : 'orange'}-500 text-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-900`
+                              : `bg-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-600`
                           }`}
                         >
                           <div className="truncate">
@@ -353,7 +353,7 @@ export default function TVGuide({ menuColor, uiColor, enabledChannels, channelNa
                             <div 
                               className="absolute inset-0 z-10" 
                               style={{
-                                boxShadow: `0 0 10px 2px var(--${uiColor}-500)`,
+                                boxShadow: `0 0 10px 2px var(--${uiColor === 'blue' ? 'blue' : uiColor === 'green' ? 'green' : uiColor === 'red' ? 'red' : uiColor === 'pink' ? 'pink' : uiColor === 'purple' ? 'purple' : uiColor === 'yellow' ? 'yellow' : 'orange'}-500)`,
                                 opacity: 0.5,
                               }}
                             />

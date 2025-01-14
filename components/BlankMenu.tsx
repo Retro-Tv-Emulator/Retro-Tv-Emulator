@@ -352,8 +352,8 @@ export default function BlankMenu({
       {showBlackScreen ? (
         <BlackScreen />
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className={`bg-${menuColor}-500 bg-opacity-30 text-${menuColor}-100 p-8 pb-16 font-mono text-lg border-2 border-${menuColor}-300 shadow-lg shadow-${menuColor}-400/50 w-4/5 h-4/5 max-w-4xl max-h-[800px] relative focus:outline-none`} tabIndex={-1}>
+        <div className={`absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50`}>
+          <div className={`bg-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-500 bg-opacity-30 text-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-100 p-8 pb-16 font-mono text-lg border-2 border-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-300 shadow-lg shadow-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-400/50 w-4/5 h-4/5 max-w-4xl max-h-[800px] relative focus:outline-none`} tabIndex={-1}>
             <h2 className={`${silkscreen.className} text-4xl mb-8 text-center font-bold text-yellow-300`} style={{ textShadow: '0 0 10px rgba(234, 179, 8, 0.5)' }}>
               Menu
             </h2>
@@ -364,8 +364,8 @@ export default function BlankMenu({
                   key={tab}
                   className={`px-4 py-2 mr-2 rounded-t-lg transition-colors duration-200 ${
                     index === selectedTabIndex && currentLayer === 1 && !isCloseButtonSelected
-                      ? `bg-${menuColor}-600 text-white ring-2 ring-${uiColor}-400 shadow-lg shadow-${uiColor}-400/50`
-                      : `bg-${menuColor}-400 bg-opacity-50 hover:bg-${menuColor}-500`
+                      ? `bg-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-600 text-white ring-2 ring-${uiColor === 'blue' ? 'blue' : uiColor === 'green' ? 'green' : uiColor === 'red' ? 'red' : uiColor === 'pink' ? 'pink' : uiColor === 'purple' ? 'purple' : uiColor === 'yellow' ? 'yellow' : 'orange'}-400 shadow-lg shadow-${uiColor === 'blue' ? 'blue' : uiColor === 'green' ? 'green' : uiColor === 'red' ? 'red' : uiColor === 'pink' ? 'pink' : uiColor === 'purple' ? 'purple' : uiColor === 'yellow' ? 'yellow' : 'orange'}-400/50`
+                      : `bg-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-400 bg-opacity-50 hover:bg-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-500`
                   }`}
                 >
                   {tab}
@@ -373,7 +373,7 @@ export default function BlankMenu({
               ))}
             </div>
 
-            <div className={`bg-${menuColor}-600 bg-opacity-30 p-6 rounded-lg h-[calc(100%-180px)] overflow-hidden`}>
+            <div className={`bg-${menuColor === 'blue' ? 'blue' : menuColor === 'green' ? 'green' : menuColor === 'red' ? 'red' : menuColor === 'pink' ? 'pink' : menuColor === 'purple' ? 'purple' : menuColor === 'yellow' ? 'yellow' : 'orange'}-600 bg-opacity-30 p-6 rounded-lg h-[calc(100%-180px)] overflow-hidden`}>
               {renderActiveTab}
             </div>
 
