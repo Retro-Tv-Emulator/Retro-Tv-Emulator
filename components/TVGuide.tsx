@@ -257,8 +257,8 @@ export default function TVGuide({ menuColor, uiColor, enabledChannels, channelNa
           <MusicVisualizer
             playlist={channelFolders[44]?.morning || []}
             isCurrentChannel={true}
-            isMuted={false}
-            volume={1}
+            isMuted={audioSettings?.isMuted}
+            volume={audioSettings?.volume / 100}
             currentTime={new Date()}
             hasCustomContent={channelFolders[44]?.morning?.length > 0}
             className="w-full h-full"
@@ -409,4 +409,3 @@ export default function TVGuide({ menuColor, uiColor, enabledChannels, channelNa
     </div>
   );
 }
-

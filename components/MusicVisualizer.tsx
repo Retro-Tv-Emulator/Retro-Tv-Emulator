@@ -16,8 +16,8 @@ import TieDyeCloudVisualizer from './visualizers/9_TieDyeCloudVisualizer';
 
 const silkscreen = Silkscreen({ weight: '400', subsets: ['latin'] })
 
-const DEFAULT_MUSIC_URL = "https://rs0eo86eke8nzztg.public.blob.vercel-storage.com/elevator-to-heaven-aaron-paul-low-main-version-21242-01-42-rlrwO9IeHV4tmUR1T5pBR152pwl7gf.mp3";
-const DEFAULT_MUSIC_TITLE = 'Default Music';
+const DEFAULT_MUSIC_URL = "/Audio/Music Visualizer Placeholder.mp3";
+const DEFAULT_MUSIC_TITLE = 'Music Visualizer Placeholder';
 
 interface Song {
   url: string;
@@ -103,6 +103,13 @@ export default function MusicVisualizer({
 
   const initializeAudioPlayback = useCallback(async (audio: HTMLAudioElement) => {
     try {
+      // Ensure the audio is fully loaded before playing
+      await new Promise((resolve, reject) => {
+        audio.oncanplaythrough = resolve;
+        audio.onerror = reject;
+        audio.load();
+      });
+
       await audio.play();
       setIsPlaying(true);
       setError(null);
@@ -191,7 +198,7 @@ export default function MusicVisualizer({
         analyzerRef.current.cleanup();
       }
     };
-  }, [hasCustomContent, isCurrentChannel, isPreview, playlist, setupAudioElement]);
+  }, [hasCustomContent, isCurrentChannel, isPreview, playlist, setupAudioElement, initializeAudioPlayback]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -210,6 +217,18 @@ export default function MusicVisualizer({
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [isCurrentChannel, isPreview, selectRandomVisualizer]);
+
+  useEffect(() => {
+    if (isCurrentChannel || isPreview) {
+      if (audioRef.current && !isPlaying) {
+        audioRef.current.play().catch(error => console.error('Resume playback error:', error));
+      }
+    } else {
+      if (audioRef.current && isPlaying) {
+        audioRef.current.pause();
+      }
+    }
+  }, [isCurrentChannel, isPreview, isPlaying]);
 
 
   const CurrentVisualizer = visualizers[currentVisualizerIndex].component;

@@ -32,11 +32,11 @@ interface ChannelProps {
 }
 
 const TV_GUIDE_IMAGE = `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-12-26%20054916-W64uqoo1mj6JUQwXbt9wOgVO1fLDg8.png?token=${process.env.BLOB_READ_WRITE_TOKEN}`;
-const STATIC_VIDEO = `https://rs0eo86eke8nzztg.public.blob.vercel-storage.com/Tv%20Static%20Placeholder-SmieTVPj1fA75ItZIyKUnB52WWkfat.mp4?token=${process.env.BLOB_READ_WRITE_TOKEN}`;
+const STATIC_VIDEO = "/Videos/Tv Static Placeholder.mp4";
 
-export default function Channel({ 
- channel, 
- videoSettings, 
+export default function Channel({
+ channel,
+ videoSettings,
  folderContent,
  isCurrentChannel,
  isPreview = false,
@@ -138,7 +138,7 @@ export default function Channel({
  if (channel === 44) {
   const musicFiles = folderContent.morning || [];
   return (
-    <MusicVisualizer 
+    <MusicVisualizer
       playlist={musicFiles.map(url => ({ url, title: 'Unknown Title' }))}
       isCurrentChannel={isCurrentChannel}
       isMuted={(audioSettings || audioSettingsFromContext).isMuted}
@@ -155,7 +155,7 @@ export default function Channel({
    return (
      <div className="w-full h-full flex items-center justify-center bg-black">
        <img
-         src={TV_GUIDE_IMAGE}
+         src={TV_GUIDE_IMAGE || "/placeholder.svg"}
          alt="TV Guide"
          className="w-full h-full object-contain"
        />
@@ -183,7 +183,7 @@ export default function Channel({
        </div>
      );
    }
-   
+
    return (
      <div className="w-full h-full flex items-center justify-center bg-black relative overflow-hidden">
        {isTransitioning ? (
