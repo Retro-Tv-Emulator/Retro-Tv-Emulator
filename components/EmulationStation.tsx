@@ -30,53 +30,53 @@ interface EmulationStationProps {
 }
 
 const logos = [
-  { 
-    name: "Game Boy Advance", 
-    url: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Gameboy%20Advance.jpg-3WcBjs4StzhOC1x0lb5mPncXHmnse5.jpeg?token=${process.env.BLOB_READ_WRITE_TOKEN}` 
+  {
+    name: "Game Boy Advance",
+    url: "/images/Gameboy Advance.jpg"
   },
-  { 
-    name: "Game Boy Color", 
-    url: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Gameboy%20Color-iHW3tbU0WVdJ6HAqS98rQz1DkoUNDL.png?token=${process.env.BLOB_READ_WRITE_TOKEN}` 
+  {
+    name: "Game Boy Color",
+    url: "/images/Gameboy Color.png"
   },
-  { 
-    name: "Game Boy", 
-    url: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Gameboy-hSRY29WO5Teuu8RksolGls6Nn1tbVV.png?token=${process.env.BLOB_READ_WRITE_TOKEN}` 
+  {
+    name: "Game Boy",
+    url: "/images/Gameboy.png"
   },
-  { 
-    name: "Nintendo 64", 
-    url: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/nintendo%2064-cP3QAcmGz68y111MAbWBXNnscrNQdW.png?token=${process.env.BLOB_READ_WRITE_TOKEN}` 
+  {
+    name: "Nintendo 64",
+    url: "/images/Nintendo 64.png"
   },
-  { 
-    name: "SEGA Genesis", 
-    url: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sega%20genesis.jpg-M4y0zcwqQbESTtdS63S0YZSnWGH9Ic.jpeg?token=${process.env.BLOB_READ_WRITE_TOKEN}` 
+  {
+    name: "SEGA Genesis",
+    url: "/images/SEGA Genesis.jpg"
   },
-  { 
-    name: "Nintendo Entertainment System", 
-    url: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/nintendo%20entertainment%20system.jpg-KB5coZds65BhEVFPEOjuMqZhk3RNIR.jpeg?token=${process.env.BLOB_READ_WRITE_TOKEN}` 
+  {
+    name: "/Nintendo Entertainment System",
+    url: "/images/Nintendo Entertainment System.jpg"
   },
-  { 
-    name: "PlayStation Portable", 
-    url: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PSP.jpg-ckDQv0A6HpgHSxiqDVc1GXV6Wp2kqQ.jpeg?token=${process.env.BLOB_READ_WRITE_TOKEN}` 
+  {
+    name: "/PlayStation Portable",
+    url: "/images/PlayStation Portable.png"
   },
-  { 
-    name: "Super Nintendo Entertainment System", 
-    url: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/super%20nintendo%20entertainment%20system.jpg-fYf3pK04tiPN8NcKDjkZnxCIi7zeEB.jpeg?token=${process.env.BLOB_READ_WRITE_TOKEN}` 
+  {
+    name: "/Super Nintendo Entertainment System",
+    url: "/images/Super Nintendo Entertainment System.jpg"
   },
-  { 
-    name: "PlayStation", 
-    url: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/playstation-fo9IXIJ03GXekZxK8WRrILaE7ZRhL4.png?token=${process.env.BLOB_READ_WRITE_TOKEN}` 
+  {
+    name: "/PlayStation",
+    url: "/images/PlayStation.png"
   },
-  { 
-    name: "MAME", 
-    url: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Mame.jpg-dDzfrANjb2Vhkyk00IgVCj8zlYCFvQ.jpeg?token=${process.env.BLOB_READ_WRITE_TOKEN}` 
+  {
+    name: "MAME",
+    url: "/images/MAME.jpg"
   },
-  { 
-    name: "DVD/VHS Player", 
-    url: `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Untitl000ed-Wvn7kyjCNjmsLzwBm9RI0YdZBxBCxE.png?token=${process.env.BLOB_READ_WRITE_TOKEN}` 
+  {
+    name: "DVD/VHS Player",
+    url: "/images/DVDVHS.png"
   },
 ];
 
-const BACKGROUND_VIDEO = `https://rs0eo86eke8nzztg.public.blob.vercel-storage.com/Tv%20Static%20Placeholder-SmieTVPj1fA75ItZIyKUnB52WWkfat.mp4?token=${process.env.BLOB_READ_WRITE_TOKEN}`;
+const BACKGROUND_VIDEO = "/videos/Tv Static Placeholder.mp4";
 
 const EmulationStation: React.FC<EmulationStationProps> = ({ isActive, uiColor, isPreview = false, disableControls = false }) => {
   const [currentView, setCurrentView] = useState<'system' | 'basic'>('system');
@@ -138,8 +138,8 @@ const EmulationStation: React.FC<EmulationStationProps> = ({ isActive, uiColor, 
   const renderLogo = (offset: number) => {
     const index = getLogoIndex(offset);
     const logo = logos[index];
-    const size = offset === 0 
-      ? (isPreview ? 'w-[320px] h-[96px]' : 'w-[400px] h-[120px]') 
+    const size = offset === 0
+      ? (isPreview ? 'w-[320px] h-[96px]' : 'w-[400px] h-[120px]')
       : (isPreview ? 'w-[224px] h-[67px]' : 'w-[280px] h-[84px]');
     const opacity = offset === 0 ? 'opacity-100' : 'opacity-50';
     const transition = 'transition-all duration-300 ease-in-out';
@@ -158,8 +158,8 @@ const EmulationStation: React.FC<EmulationStationProps> = ({ isActive, uiColor, 
   };
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className={`w-full h-full relative transition-opacity duration-300 ${
         isActive ? 'opacity-100' : 'opacity-50'
       } ${!isPreview ? 'scale-120' : 'preview-mode'}`}
@@ -198,8 +198,8 @@ const EmulationStation: React.FC<EmulationStationProps> = ({ isActive, uiColor, 
             </div>
             <button
               className={`${silkscreen.className} px-6 py-3 text-xl text-white rounded-lg transition-all duration-300 ${
-                isExitButtonFocused 
-                  ? `bg-${uiColor}-500 ring-4 ring-${uiColor}-400 shadow-lg shadow-${uiColor}-500/50` 
+                isExitButtonFocused
+                  ? `bg-${uiColor}-500 ring-4 ring-${uiColor}-400 shadow-lg shadow-${uiColor}-500/50`
                   : `bg-${uiColor}-600 hover:bg-${uiColor}-700`
               }`}
               onClick={() => setCurrentView('system')}
@@ -213,7 +213,7 @@ const EmulationStation: React.FC<EmulationStationProps> = ({ isActive, uiColor, 
       )}
       <audio
         ref={audioRef}
-        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/11)-funky-s-fugue-M4ew542uAh1cibqCSg2um34ZpzhJkX.mp3"
+        src="/audio/Gaming Music.mp3"
         loop
       />
     </div>
