@@ -10,7 +10,7 @@ interface LoadingScreenProps {
  onLoadingComplete: () => void
 }
 
-const ICON_URL = `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Icon-S8oMfRmuci2LUHFOcmJ8UOAB9y7D7i.png?token=${process.env.BLOB_READ_WRITE_TOKEN}`;
+const ICON_URL = "/images/icon.png";
 
 export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps) {
  const [progress, setProgress] = useState(0)
