@@ -31,7 +31,7 @@ interface ChannelProps {
  isMusic?: boolean
 }
 
-const TV_GUIDE_IMAGE = `https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-12-26%20054916-W64uqoo1mj6JUQwXbt9wOgVO1fLDg8.png?token=${process.env.BLOB_READ_WRITE_TOKEN}`;
+const TV_GUIDE_IMAGE = "Images/Tv Guide Logo.png";
 const STATIC_VIDEO = "/Videos/Tv Static Placeholder.mp4";
 
 export default function Channel({
