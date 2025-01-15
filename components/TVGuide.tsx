@@ -246,7 +246,7 @@ export default function TVGuide({ menuColor, uiColor, enabledChannels, channelNa
         return (
           <div className="w-full h-full flex items-center justify-center bg-black relative">
             <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202024-12-26%20054916-W64uqoo1mj6JUQwXbt9wOgVO1fLDg8.png"
+              src="Images/Tv Guide Logo.png"
               alt="TV Guide"
               className="w-full h-full object-contain"
             />
