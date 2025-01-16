@@ -53,8 +53,18 @@ export default function ChannelScheduling({
       <MusicChannelScheduling
         channel={channel}
         onBack={onBack}
-        onFoldersChange={(folders) => onFoldersChange({ morning: folders, evening: [], night: [], commercials: [], intros: [], outros: [] })}
-        initialFolders={initialFolders.morning}
+        onFoldersChange={(folders) => {
+          const musicFolders: FolderSelection = {
+            morning: folders.map(f => f.url),
+            evening: [],
+            night: [],
+            commercials: [],
+            intros: [],
+            outros: []
+          };
+          onFoldersChange(musicFolders);
+        }}
+        initialFolders={initialFolders.morning.map(url => ({ url, title: '' }))}
         onChannelNameChange={onChannelNameChange}
         initialChannelName={initialChannelName}
         menuColor={menuColor}
@@ -174,6 +184,9 @@ export default function ChannelScheduling({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isInTabContent, selectedItemIndex, setSelectedItemIndex, onBack, channel, isChannelEnabled, onChannelToggle, handleOpenNameDialog, handleFolderSelect])
 
+  const slots: (keyof FolderSelection)[] = ['morning', 'evening', 'night'];
+  const otherSlots: (keyof FolderSelection)[] = ['commercials', 'intros', 'outros'];
+
   return (
     <div className={`bg-${menuColor}-800 p-2 rounded-lg h-full overflow-y-auto text-xs`}>
       <div className="flex flex-wrap justify-between items-center mb-1">
@@ -217,7 +230,7 @@ export default function ChannelScheduling({
       </div>
       <div className="grid grid-cols-2 gap-1 mt-2">
         <div className="col-span-1">
-          {['morning', 'evening', 'night'].map((slot, index) => (
+          {slots.map((slot, index) => (
             <div key={slot} className="p-1">
               <h4 className="text-sm font-bold mb-1">{slot.charAt(0).toUpperCase() + slot.slice(1)}</h4>
               <Button 
@@ -237,7 +250,7 @@ export default function ChannelScheduling({
           ))}
         </div>
         <div className="col-span-1">
-          {['commercials', 'intros', 'outros'].map((slot, index) => (
+          {otherSlots.map((slot, index) => (
             <div key={slot} className="p-1">
               <h4 className="text-sm font-bold mb-1">{slot.charAt(0).toUpperCase() + slot.slice(1)}</h4>
               <Button 

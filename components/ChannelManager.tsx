@@ -3,9 +3,8 @@
 import React, { useState, useEffect } from 'react'
 import Channel from './Channel'
 import TVGuide from './TVGuide'
-import VideoPlayerChannel from './VideoPlayerChannel'
 import { VideoSettingsType } from './VideoSettings'
-import { FolderSelection } from '../types'
+import { FolderSelection, Song } from '../types'
 import { useAudio } from '../contexts/AudioContext'
 import EmulationStation from './EmulationStation'
 import MusicVisualizer from './MusicVisualizer'
@@ -20,6 +19,13 @@ interface ChannelManagerProps {
   menuColor: string
   uiColor: string
   isAnyMenuOpen: boolean
+  audioSettings: {
+    isMuted: boolean
+    volume: number
+    isStereo: boolean
+  }
+  isVideoPlayerButtonSelected: boolean
+  setIsVideoPlayerButtonSelected: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function ChannelManager({
@@ -32,10 +38,13 @@ export default function ChannelManager({
   menuColor,
   uiColor,
   isAnyMenuOpen,
+  audioSettings,
+  isVideoPlayerButtonSelected,
+  setIsVideoPlayerButtonSelected
 }: ChannelManagerProps) {
   const [loadedChannels, setLoadedChannels] = useState<number[]>([])
   const [isEmulationStationLoaded, setIsEmulationStationLoaded] = useState(false)
-  const { audioSettings } = useAudio()
+  //const { audioSettings } = useAudio()
 
   useEffect(() => {
     if (!loadedChannels.includes(currentChannel)) {
@@ -67,7 +76,7 @@ export default function ChannelManager({
             />
           ) : channel === 44 ? (
             <MusicVisualizer 
-              playlist={channelFolders[44]?.morning || []}
+              playlist={(channelFolders[44]?.morning || []).map(url => ({ url, title: 'Unknown Title' }))}
               isCurrentChannel={currentChannel === 44}
               isMuted={audioSettings.isMuted}
               volume={audioSettings.volume / 100}
@@ -102,3 +111,4 @@ export default function ChannelManager({
     </div>
   );
 }
+

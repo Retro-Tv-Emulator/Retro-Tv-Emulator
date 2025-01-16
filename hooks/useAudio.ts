@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    webkitAudioContext: typeof AudioContext
+  }
+}
+
 import { useState, useEffect, useCallback } from 'react'
 import { AudioSettingsType } from '../types'
 

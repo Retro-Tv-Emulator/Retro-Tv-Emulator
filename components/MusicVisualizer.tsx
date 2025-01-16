@@ -16,8 +16,8 @@ import TieDyeCloudVisualizer from './visualizers/9_TieDyeCloudVisualizer';
 
 const silkscreen = Silkscreen({ weight: '400', subsets: ['latin'] })
 
-const DEFAULT_MUSIC_URL = "/Audio/Music Visualizer Placeholder.mp3";
-const DEFAULT_MUSIC_TITLE = 'Music Visualizer Placeholder';
+const DEFAULT_MUSIC_URL = "audio/Music Visualizer Placeholder.mp3";
+const DEFAULT_MUSIC_TITLE = 'Default Music';
 
 interface Song {
   url: string;
@@ -25,7 +25,7 @@ interface Song {
 }
 
 interface MusicVisualizerProps {
-  playlist: Song[];
+  playlist: { url: string; title: string }[];
   isCurrentChannel: boolean;
   isMuted: boolean;
   volume: number;
@@ -274,4 +274,3 @@ export default function MusicVisualizer({
     </div>
   );
 }
-

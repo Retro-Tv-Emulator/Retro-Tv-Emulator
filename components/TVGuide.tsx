@@ -8,7 +8,6 @@ import EmulationStation from './EmulationStation';
 import MusicVisualizerPlaceholder from './MusicVisualizerPlaceholder'
 import Channel from './Channel'
 import { FolderSelection } from '../types'
-import VideoPlayerChannel from './VideoPlayerChannel'
 import NoContentMessage from './NoContentMessage'
 import MusicVisualizer from './MusicVisualizer';
 import React from 'react';
@@ -246,7 +245,7 @@ export default function TVGuide({ menuColor, uiColor, enabledChannels, channelNa
         return (
           <div className="w-full h-full flex items-center justify-center bg-black relative">
             <img
-              src="Images/Tv Guide Logo.png"
+              src="/images/Tv Guide Logo.png"
               alt="TV Guide"
               className="w-full h-full object-contain"
             />
@@ -255,10 +254,10 @@ export default function TVGuide({ menuColor, uiColor, enabledChannels, channelNa
       case 44:
         return (
           <MusicVisualizer
-            playlist={channelFolders[44]?.morning || []}
+            playlist={(channelFolders[44]?.morning || []).map(url => ({ url, title: 'Unknown Title' }))}
             isCurrentChannel={true}
-            isMuted={audioSettings?.isMuted}
-            volume={audioSettings?.volume / 100}
+            isMuted={audioSettings?.isMuted ?? false}
+            volume={(audioSettings?.volume ?? 100) / 100}
             currentTime={new Date()}
             hasCustomContent={channelFolders[44]?.morning?.length > 0}
             className="w-full h-full"
@@ -409,3 +408,4 @@ export default function TVGuide({ menuColor, uiColor, enabledChannels, channelNa
     </div>
   );
 }
+
