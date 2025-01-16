@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const isDev = require('electron-is-dev')
 
@@ -7,8 +7,10 @@ function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
+      // Secure configuration while maintaining required functionality
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     },
   })
 
@@ -17,6 +19,11 @@ function createWindow() {
     : `file://${path.join(__dirname, './out/index.html')}`
 
   mainWindow.loadURL(startUrl)
+
+  // Handle app-exit IPC message
+  ipcMain.on('app-exit', () => {
+    app.quit()
+  })
 
   if (isDev) {
     mainWindow.webContents.openDevTools()
