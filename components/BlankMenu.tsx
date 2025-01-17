@@ -233,7 +233,6 @@ export default function BlankMenu({
           <ChannelScheduling 
             channel={selectedChannel} 
             onBack={handleBackToChannels} 
-            onClose={onClose}
             onFoldersChange={(folders) => onFoldersChange(selectedChannel, folders)}
             initialFolders={channelFolders[selectedChannel] || {
               morning: [],
@@ -275,7 +274,9 @@ export default function BlankMenu({
             onSettingsChange={onVideoSettingsChange}
             initialSettings={videoSettings}
             selectedItemIndex={selectedItemIndex}
+            setSelectedItemIndex={setSelectedItemIndex}
             uiColor={uiColor}
+            menuColor={menuColor}
             isInTabContent={currentLayer === 2}
             onExitTab={() => {
               setCurrentLayer(1);
@@ -290,6 +291,7 @@ export default function BlankMenu({
             initialSettings={audioSettings}
             selectedItemIndex={selectedItemIndex}
             uiColor={uiColor}
+            menuColor={menuColor}
             isInTabContent={currentLayer === 2}
             onExitTab={() => {
               setCurrentLayer(1);

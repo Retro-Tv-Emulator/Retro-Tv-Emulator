@@ -5,12 +5,14 @@ export async function loadAudio(url: string): Promise<HTMLAudioElement> {
     audio.addEventListener('canplaythrough', () => resolve(audio), { once: true });
     audio.addEventListener('error', () => reject(new Error(`Failed to load audio: ${url}`)), { once: true });
     
-    // Ensure the URL is treated as an audio file
-    audio.type = 'audio/mpeg';
+    // Set the type using the 'type' attribute instead of the property
+    audio.setAttribute('type', 'audio/mpeg');
     audio.src = url;
     audio.load();
   });
 }
+
+
 
 export function createAudioContext(): AudioContext {
   const AudioContext = window.AudioContext || (window as any).webkitAudioContext;

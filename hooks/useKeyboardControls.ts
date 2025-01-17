@@ -13,6 +13,8 @@ interface KeyboardControlsProps {
   systemSettings: SystemSettingsType
   handleChannelInput: (input: string) => void
   clearChannelInput: () => void
+  isVideoPlayerButtonSelected: boolean;
+  setIsVideoPlayerButtonSelected: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function useKeyboardControls({
@@ -26,7 +28,9 @@ export default function useKeyboardControls({
   isAnyMenuOpen,
   systemSettings,
   handleChannelInput,
-  clearChannelInput
+  clearChannelInput,
+  isVideoPlayerButtonSelected,
+  setIsVideoPlayerButtonSelected
 }: KeyboardControlsProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -98,7 +102,9 @@ export default function useKeyboardControls({
     audioSettings.isMuted,
     isAnyMenuOpen,
     handleChannelInput,
-    clearChannelInput
+    clearChannelInput,
+    isVideoPlayerButtonSelected,
+    setIsVideoPlayerButtonSelected
   ])
 }
 

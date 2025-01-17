@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { VideoSettingsType, SystemSettingsType, FolderSelection, ChannelData } from '../types'
 import { DEFAULT_SETTINGS, TOTAL_CHANNELS, FIRST_CHANNEL, LAST_CHANNEL } from '../constants'
 import useKeyboardControls from '../hooks/useKeyboardControls'
-import { debounce } from 'lodash-es';
+import debounce from 'lodash-es/debounce';
 import { loadFromLocalStorage, saveToLocalStorage } from '../utils/localStorage'
 import ChannelManager from '../components/ChannelManager'
 import { AudioProvider, useAudio } from '../contexts/AudioContext'
@@ -17,7 +17,7 @@ const ControlsMenu = dynamic(() => import('../components/ControlsMenu'), { ssr: 
 const BlankMenu = dynamic(() => import('../components/BlankMenu'), { ssr: false })
 const ExitConfirmation = dynamic(() => import('../components/ExitConfirmation'), { ssr: false })
 const MuteDisplay = dynamic(() => import('../components/MuteDisplay'), { ssr: false })
-const EmulationStation = dynamic(() => import('../components/EmulationStation'), { ssr: false }) // Added import
+const EmulationStation = dynamic(() => import('../components/EmulationStation'), { ssr: false })
 
 function HomeContent() {
   const { audioSettings, setAudioSettings, toggleMute, changeVolume } = useAudio();
@@ -33,7 +33,10 @@ function HomeContent() {
     new Set(Array.from({ length: LAST_CHANNEL - FIRST_CHANNEL + 1 }, (_, i) => i + FIRST_CHANNEL))
   )
   const [videoSettings, setVideoSettings] = useState<VideoSettingsType>(DEFAULT_SETTINGS.video)
-  const [systemSettings, setSystemSettings] = useState<SystemSettingsType>(DEFAULT_SETTINGS.system)
+  const [systemSettings, setSystemSettings] = useState<SystemSettingsType>(() => ({
+    ...DEFAULT_SETTINGS.system,
+    startOnPCBoot: loadFromLocalStorage('startOnPCBoot', false)
+  }))
   const [channelFolders, setChannelFolders] = useState<Record<number, FolderSelection>>({})
   const [menuColor, setMenuColor] = useState(() => loadFromLocalStorage('menuColor', 'blue'))
   const [uiColor, setUiColor] = useState(() => loadFromLocalStorage('uiColor', 'green'))
@@ -43,7 +46,7 @@ function HomeContent() {
   const [channelInput, setChannelInput] = useState<string>('')
   const [showChannelInput, setShowChannelInput] = useState(false)
   const [channels, setChannels] = useState<ChannelData[]>([])
-  const [isVideoPlayerButtonSelected, setIsVideoPlayerButtonSelected] = useState(true) // Added state for video player button
+  const [isVideoPlayerButtonSelected, setIsVideoPlayerButtonSelected] = useState(true)
 
   const volumeDisplayTimeout = useRef<NodeJS.Timeout | null>(null);
   const muteDisplayTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -57,7 +60,7 @@ function HomeContent() {
 
   const changeChannel = useCallback((delta: number, directChannel?: number) => {
     setIsChangingChannel(true)
-    setShowChannel(false) // Hide the channel display initially
+    setShowChannel(false) 
     setChannel(prev => {
       let newChannel: number
       if (directChannel !== undefined) {
@@ -66,7 +69,6 @@ function HomeContent() {
         newChannel = ((prev - FIRST_CHANNEL + delta + (LAST_CHANNEL - FIRST_CHANNEL + 1)) % (LAST_CHANNEL - FIRST_CHANNEL + 1)) + FIRST_CHANNEL
       }
       
-      // Include channel 5 and 6 in the navigation
       while (!enabledChannels.has(newChannel) && newChannel !== FIRST_CHANNEL && newChannel !== 4 && newChannel !== 5 && newChannel !== 6 && newChannel !== prev) {
         newChannel = ((newChannel - FIRST_CHANNEL + delta + (LAST_CHANNEL - FIRST_CHANNEL + 1)) % (LAST_CHANNEL - FIRST_CHANNEL + 1)) + FIRST_CHANNEL
       }
@@ -79,7 +81,7 @@ function HomeContent() {
 
     setTimeout(() => {
       setIsChangingChannel(false)
-      setShowChannel(true) // Show the channel number
+      setShowChannel(true) 
 
       setTimeout(() => {
         setShowChannel(false)
@@ -96,11 +98,15 @@ function HomeContent() {
     if (!audioSettings.isMuted) {
       changeVolume(delta);
       debouncedSetShowVolume(true);
-      clearTimeout(volumeDisplayTimeout.current);
+      if (volumeDisplayTimeout.current !== null) {
+        clearTimeout(volumeDisplayTimeout.current);
+      }
       volumeDisplayTimeout.current = setTimeout(() => debouncedSetShowVolume(false), 3000);
     } else {
       setShowMute(true);
-      clearTimeout(muteDisplayTimeout.current);
+      if (muteDisplayTimeout.current !== null) {
+        clearTimeout(muteDisplayTimeout.current);
+      }
       muteDisplayTimeout.current = setTimeout(() => setShowMute(false), 3000);
     }
   }, [audioSettings.isMuted, changeVolume, debouncedSetShowVolume]);
@@ -131,15 +137,13 @@ function HomeContent() {
 
   const handleChannelInput = useCallback((input: string) => {
     setChannelInput(prev => {
-      const newInput = (prev + input).slice(-2)  // Keep only the last two digits
+      const newInput = (prev + input).slice(-2)  
       setShowChannelInput(true)
       
-      // Clear any existing timeout
       if (channelInputTimeout.current) {
         clearTimeout(channelInputTimeout.current)
       }
 
-      // Set a new timeout
       channelInputTimeout.current = setTimeout(() => {
         const channelNumber = parseInt(newInput, 10)
         if (channelNumber >= 3 && channelNumber <= 44) {
@@ -164,13 +168,17 @@ function HomeContent() {
     systemSettings,
     handleChannelInput,
     clearChannelInput,
-    isVideoPlayerButtonSelected, // Added prop
-    setIsVideoPlayerButtonSelected // Added prop
+    isVideoPlayerButtonSelected,
+    setIsVideoPlayerButtonSelected
   })
 
-  const handleExit = () => {
-    console.log("Exiting the application")
-  }
+  const handleExit = useCallback(() => {
+    if (window.electron) {
+      window.electron.ipcRenderer.send('app-exit', {});
+    } else {
+      console.log("Exiting the application");
+    }
+  }, []);
 
   const handleChannelToggle = useCallback((channel: number, isEnabled: boolean) => {
     setEnabledChannels(prev => {
@@ -182,7 +190,6 @@ function HomeContent() {
       }
       return newSet
     })
-    // Update channel data
     setChannels(prev => prev.map(ch => 
       ch.id === channel ? { ...ch, isEnabled } : ch
     ))
@@ -194,12 +201,12 @@ function HomeContent() {
   }
 
   const handleFoldersChange = useCallback((channel: number, folders: FolderSelection) => {
-   setChannelFolders(prev => {
-     const updated = { ...prev, [channel]: folders };
-     saveToLocalStorage('channelFolders', updated);
-     return updated;
-   });
- }, []);
+    setChannelFolders(prev => {
+      const updated = { ...prev, [channel]: folders };
+      saveToLocalStorage('channelFolders', updated);
+      return updated;
+    });
+  }, []);
 
   const handleThemeChange = (newMenuColor: string, newUiColor: string) => {
     setMenuColor(newMenuColor)
@@ -211,6 +218,7 @@ function HomeContent() {
   const handleSystemSettingsChange = (newSettings: SystemSettingsType) => {
     setSystemSettings(newSettings)
     saveToLocalStorage('systemSettings', newSettings)
+    saveToLocalStorage('startOnPCBoot', newSettings.startOnPCBoot)
   }
 
   const handleLoadingComplete = () => {
@@ -273,10 +281,7 @@ function HomeContent() {
   }, []);
 
   useEffect(() => {
-    // Disable mouse interactions globally
     document.body.style.pointerEvents = 'none';
-    
-    // Enable pointer events for the root div to allow keyboard focus
     const rootDiv = document.getElementById('__next');
     if (rootDiv) {
       rootDiv.style.pointerEvents = 'auto';
@@ -300,7 +305,7 @@ function HomeContent() {
         channelName += ' TV Guide'
         showName = 'TV Guide'
       } else if (channelNumber === 5) {
-        channelName = '05 Video Player' // Updated to always set channel 5 as Video Player
+        channelName = '05 Video Player' 
         showName = 'Video Player'
       } else if (channelNumber === 6) {
         channelName = '06'
@@ -338,18 +343,19 @@ function HomeContent() {
         <div className="w-full h-full">
           <ChannelManager
             currentChannel={channel}
-            isMuted={audioSettings.isMuted || isAnyMenuOpen}
-            volume={audioSettings.volume / 100}
             videoSettings={videoSettings}
             channelFolders={channelFolders}
-            isStereo={audioSettings.isStereo}
             enabledChannels={enabledChannels}
             channelNames={channelNames}
             onChannelChange={(newChannel) => changeChannel(0, newChannel)}
             menuColor={menuColor}
             uiColor={uiColor}
             isAnyMenuOpen={isAnyMenuOpen}
-            audioSettings={audioSettings}
+            audioSettings={{
+              isMuted: audioSettings.isMuted || isAnyMenuOpen,
+              volume: audioSettings.volume / 100,
+              isStereo: audioSettings.isStereo
+            }}
             isVideoPlayerButtonSelected={isVideoPlayerButtonSelected}
             setIsVideoPlayerButtonSelected={setIsVideoPlayerButtonSelected}
           />
@@ -390,7 +396,15 @@ function HomeContent() {
           LAST_CHANNEL={LAST_CHANNEL}
         />
       )}
-      {showExitConfirmation && <ExitConfirmation onConfirm={handleExit} menuColor={menuColor} uiColor={uiColor} />}
+      {showExitConfirmation && (
+        <ExitConfirmation 
+          onConfirm={handleExit} 
+          menuColor={menuColor} 
+          uiColor={uiColor} 
+          title="Exit Confirmation"
+          message="Are you sure you want to exit the application?"
+        />
+      )}
       {<ChannelDisplay 
         channel={channel} 
         uiColor={uiColor} 
@@ -403,7 +417,7 @@ function HomeContent() {
   )
 }
 
-export default function Home() {
+export default function Page() {
   return (
     <AudioProvider>
       <div className="w-full h-screen relative bg-black overflow-hidden focus:outline-none" tabIndex={-1}>
@@ -412,4 +426,3 @@ export default function Home() {
     </AudioProvider>
   )
 }
-

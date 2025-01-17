@@ -15,6 +15,7 @@ export const DEFAULT_SETTINGS = {
   system: {
     channel3Option: 'default' as const,
     showControlsOnStart: true,
+    startOnPCBoot: false,
   } as SystemSettingsType,
 };
 
