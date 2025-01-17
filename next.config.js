@@ -18,14 +18,18 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Remove experimental.appDir as it's no longer needed in Next.js 14
   webpack: (config, { isServer }) => {
     if (!isServer) {
-      config.target = 'electron-renderer';
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
     }
     return config;
-  },
-};
+  }
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
 
