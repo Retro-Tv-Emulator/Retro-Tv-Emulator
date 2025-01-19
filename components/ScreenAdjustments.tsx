@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 interface ScreenAdjustmentsProps {
   onClose: () => void
@@ -10,54 +11,69 @@ interface ScreenAdjustmentsProps {
 }
 
 export default function ScreenAdjustments({ onClose, uiColor, menuColor }: ScreenAdjustmentsProps) {
-  const [selectedItemIndex, setSelectedItemIndex] = useState(0)
+  const [scale, setScale] = useState({ x: 1, y: 1 })
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    switch (e.key.toLowerCase()) {
-      case 'w':
-        setSelectedItemIndex(prev => Math.max(0, prev - 1))
-        break
-      case 's':
-        setSelectedItemIndex(prev => Math.min(1, prev + 1))
-        break
-      case 'enter':
-        if (selectedItemIndex === 0) {
-          // Implement screen adjustment logic here
-        } else if (selectedItemIndex === 1) {
-          onClose()
-        }
-        break
-      case 'escape':
-        onClose()
-        break
-    }
-  }, [selectedItemIndex, onClose])
+  const adjustScale = useCallback((axis: 'x' | 'y', amount: number) => {
+    setScale(prev => ({
+      ...prev,
+      [axis]: Math.max(0.5, Math.min(1.5, prev[axis] + amount))
+    }))
+  }, [])
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      e.preventDefault()
+      const step = 0.01
+      
+      switch (e.key.toLowerCase()) {
+        case 'w':
+          adjustScale('y', step)
+          break
+        case 's':
+          adjustScale('y', -step)
+          break
+        case 'a':
+          adjustScale('x', step)
+          break
+        case 'd':
+          adjustScale('x', -step)
+          break
+        case 'enter':
+        case 'escape':
+          onClose()
+          break
+      }
+    }
+
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [handleKeyDown])
+  }, [adjustScale, onClose])
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-      <div className={`bg-${menuColor}-800 p-8 rounded-lg w-full max-w-md`}>
-        <h2 className="text-2xl font-bold mb-4 text-white">Screen Adjustments</h2>
-        <div className="space-y-4">
-          <Button
-            className={`w-full ${selectedItemIndex === 0 ? `bg-${uiColor}-500 hover:bg-${uiColor}-600` : 'bg-gray-600 hover:bg-gray-700'}`}
-          >
-            Adjust Screen
-          </Button>
-          <Button
-            onClick={onClose}
-            className={`w-full ${selectedItemIndex === 1 ? `bg-${uiColor}-500 hover:bg-${uiColor}-600` : 'bg-gray-600 hover:bg-gray-700'}`}
-          >
-            Back
-          </Button>
-        </div>
+    <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
+      <div 
+        className="bg-center bg-contain bg-no-repeat w-full h-full relative"
+        style={{
+          transform: `scale(${scale.x}, ${scale.y})`,
+          transformOrigin: 'center',
+        }}
+      >
+        <Image
+          src="/images/ScreenAdjustment.png"
+          alt="Screen Adjustment Grid"
+          layout="fill"
+          objectFit="contain"
+          priority
+        />
+      </div>
+      
+      <div className="absolute bottom-4 right-4">
+        <Button
+          onClick={onClose}
+          className={`bg-${uiColor}-500 hover:bg-${uiColor}-600 ring-2 ring-${uiColor}-400 shadow-lg shadow-${uiColor}-400/50`}
+        >
+          Close
+        </Button>
       </div>
     </div>
   )
